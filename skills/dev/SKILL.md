@@ -35,6 +35,9 @@ Load at the start of any code-writing task. Check the trigger table before writi
 | Writing a PowerShell hook that changes `$ErrorActionPreference`, changes directories, calls native executables, or checks command success with `$?` | `library/dev/14-powershell-scoped-hooks.md` |
 | Adding `None`, key-existence, `isinstance`, schema, or transport-shape checks inside business logic that already receives a parsed domain object | `library/dev/15-cross-parse-boundary.md` |
 | Writing a function with many live booleans, nested branches, mutable side effects, optional values, or intermediate variables that cannot be named as a small coherent set | `library/dev/16-cross-cognitive-chunking.md` |
+| Placing an API key, token, client secret, or credential-bearing config object in a function body, module global, or config dict instead of constructing it at the composition root | `library/dev/17-python-composition-root-creds.md` |
+| Adding `if user.role`, `if permission`, `is_admin`, `require_scope`, or authorization logic inside a domain or business function instead of at the entrypoint | `library/dev/18-python-boundary-permission-gate.md` |
+| Obtaining an access token once and performing multiple API calls without expiry checking, mid-run `401` handling, refresh-and-retry, rotated token persistence, or hard failure on revocation | `library/dev/19-python-refresh-and-reauthorize.md` |
 
 ## Library growth
 

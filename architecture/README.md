@@ -77,7 +77,7 @@ Three questions gate a new entry:
 
 ## Current coverage
 
-16 entries across five domains. Auth and permissions in progress (3 entries).
+19 entries across six domains.
 
 | Domain | Entries | Key failure modes covered |
 |---|---|---|
@@ -86,4 +86,4 @@ Three questions gate a new entry:
 | TypeScript / React | 4 | Defensive accumulation, premature abstraction, hook-order drift |
 | PowerShell | 1 | Untestable coupling |
 | Cross-language | 2 | Defensive accumulation, complexity underestimation |
-| Auth (in progress) | 3 | Credential scope leak, permission gate misplacement, token lifecycle blindness |
+| Auth / Python | 3 | Credential scope leak, permission gate misplacement, token lifecycle blindness |

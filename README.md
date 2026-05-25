@@ -78,7 +78,7 @@ The 16 entries in this library come from a three-pass research thread:
 - Pass 2: ChatGPT adversarial audit (sourcing verification, technical accuracy, coverage gaps)
 - Pass 3: ChatGPT third-pass (corrections to the audit, missing patterns, sound examples)
 
-Three additional auth and permissions entries are in progress via a ChatGPT-only three-pass thread.
+Three auth and permissions entries (17-19) landed from a separate ChatGPT-only three-pass thread.
 
 ## What this is not
 

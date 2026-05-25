@@ -22,6 +22,9 @@ Agent-consumable pattern corpus. Each entry is self-contained: read one entry, a
 | Writing a PowerShell hook that changes `$ErrorActionPreference`, changes directories, calls native executables, or checks command success with `$?` | [14-powershell-scoped-hooks.md](14-powershell-scoped-hooks.md) |
 | Adding `None`, key-existence, `isinstance`, schema, or transport-shape checks inside business logic that already receives a parsed domain object | [15-cross-parse-boundary.md](15-cross-parse-boundary.md) |
 | Writing a function with many live booleans, nested branches, mutable side effects, optional values, or intermediate variables that cannot be named as a small coherent set | [16-cross-cognitive-chunking.md](16-cross-cognitive-chunking.md) |
+| Placing an API key, token, client secret, or credential-bearing config object in a function body, module global, or config dict instead of constructing it at the composition root | [17-python-composition-root-creds.md](17-python-composition-root-creds.md) |
+| Adding `if user.role`, `if permission`, `is_admin`, `require_scope`, or authorization logic inside a domain or business function instead of at the entrypoint | [18-python-boundary-permission-gate.md](18-python-boundary-permission-gate.md) |
+| Obtaining an access token once and performing multiple API calls without expiry checking, mid-run `401` handling, refresh-and-retry, rotated token persistence, or hard failure on revocation | [19-python-refresh-and-reauthorize.md](19-python-refresh-and-reauthorize.md) |
 
 ## Entry format
 
@@ -33,4 +36,4 @@ New entries are added when a resolved rework event reveals a repeatable pattern.
 
 ## Research basis
 
-Entries 01-16 come from a three-pass research thread: Gemini breadth pass, ChatGPT adversarial audit, ChatGPT third-pass. Auth and Permissions entries (17-19) pending a separate ChatGPT-only three-pass thread.
+Entries 01-16 come from a three-pass research thread: Gemini breadth pass, ChatGPT adversarial audit, ChatGPT third-pass. Auth and Permissions entries (17-19) from a separate ChatGPT-only three-pass thread (breadth, audit, adversarial + extraction). Pass 2 caught a P0 in entry 18; Pass 3 resolved two undefined class names in entry 19. All corrections folded before entries were written.
