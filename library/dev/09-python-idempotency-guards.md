@@ -23,17 +23,17 @@ def provision(path: Path, payload: str) -> None:
     api.create_runner(payload)          # creates a duplicate runner on retry
 ```
 
-## After — compare-before-write (filesystem / API)
+## After: compare-before-write (filesystem / API)
 
 ```python
 def provision(path: Path, payload: str) -> None:
     if path.exists() and path.read_text(encoding="utf-8").strip() == payload.strip():
-        return                          # desired state already present — no-op
+        return                          # desired state already present, no-op
     path.write_text(payload, encoding="utf-8")
     api.create_or_update_runner(payload)   # API must support upsert semantics
 ```
 
-## After — uniqueness guard (database)
+## After: uniqueness guard (database)
 
 ```python
 def seed_runner(db: sqlite3.Connection, run_id: str, name: str) -> None:

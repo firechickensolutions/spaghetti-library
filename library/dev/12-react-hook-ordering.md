@@ -14,9 +14,9 @@ Halt and read this entry when about to call a React hook inside a condition, loo
 
 ```tsx
 function Panel({ enabled }: { enabled: boolean }) {
-  if (!enabled) return null;              // early return before hooks — rule violation
+  if (!enabled) return null;              // early return before hooks: rule violation
   const [open, setOpen] = useState(false);
-  if (open) useEffect(syncPanel, []);     // hook inside condition — rule violation
+  if (open) useEffect(syncPanel, []);     // hook inside condition: rule violation
   return <button onClick={() => setOpen(!open)} />;
 }
 ```
@@ -38,9 +38,9 @@ function Panel({ enabled }: { enabled: boolean }) {
 
 | Rule | Failure mode prevented |
 |---|---|
-| No hooks inside conditions or loops | Render-count drift — React tracks hooks by call order; conditional calls desync the order |
-| No hooks after an early return | Same — an early return makes hooks conditional on the return path |
-| No hooks inside event handlers, nested functions, class components, or callbacks passed to `useMemo`/`useReducer`/`useEffect` | Stateful logic hidden outside React's render model — state updates do not trigger re-renders |
+| No hooks inside conditions or loops | Render-count drift: React tracks hooks by call order; conditional calls desync the order |
+| No hooks after an early return | Same: an early return makes hooks conditional on the return path |
+| No hooks inside event handlers, nested functions, class components, or callbacks passed to `useMemo`/`useReducer`/`useEffect` | Stateful logic hidden outside React's render model; state updates do not trigger re-renders |
 | No hooks inside `try`/`catch`/`finally` | Exceptional flow changes the hook call graph when an exception short-circuits a hook call |
 
-**`exhaustive-deps`:** the `eslint-plugin-react-hooks/exhaustive-deps` rule validates dependency arrays. A missing dependency causes the effect or memo to close over a stale value silently — one of the most common React bugs in AI-generated components.
+**`exhaustive-deps`:** the `eslint-plugin-react-hooks/exhaustive-deps` rule validates dependency arrays. A missing dependency causes the effect or memo to close over a stale value silently, one of the most common React bugs in AI-generated components.

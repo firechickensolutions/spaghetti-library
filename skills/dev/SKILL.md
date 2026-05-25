@@ -2,7 +2,7 @@
 
 ## Diagnostic
 
-AI agents generate code that passes syntax checks but introduces rework: premature abstraction, defensive accumulation, untestable coupling, and patterns that look correct in isolation but break under the system's constraints. This skill routes agents to sourced patterns at the moment of generation — before the failure mode lands.
+AI agents generate code that passes syntax checks but introduces rework: premature abstraction, defensive accumulation, untestable coupling, and patterns that look correct in isolation but break under the system's constraints. This skill routes agents to sourced patterns at the moment of generation, before the failure mode lands.
 
 ## When to load
 
@@ -42,7 +42,7 @@ When a rework event reveals a repeatable pattern:
 
 1. Create a new numbered entry in `library/dev/` using the 6-field format
 2. Add a row to the trigger table above and to `library/dev/README.md`
-3. Cite the source — PEP, official docs, named practitioner text with author and section
+3. Cite the source: PEP, official docs, named practitioner text with author and section
 
 Entries earn a slot by preventing rework, not by anticipation.
 

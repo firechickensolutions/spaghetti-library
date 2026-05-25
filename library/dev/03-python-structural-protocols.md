@@ -4,7 +4,7 @@
 
 **Rework-prevention rationale:** Prevents interface-with-one-implementation and imaginary extensibility by replacing nominal inheritance hierarchies with structural contracts that only declare polymorphism when it is actually needed.
 
-**Canonical source:** Guido van Rossum, Jukka Lehtosalo, and Łukasz Langa, *PEP 544 — Protocols: Structural subtyping (static duck typing)* (peps.python.org/pep-0544); Brett Slatkin, *Effective Python, Third Edition*, item on accepting functions and simple interfaces before classes.
+**Canonical source:** Guido van Rossum, Jukka Lehtosalo, and Łukasz Langa, *PEP 544, Protocols: Structural subtyping (static duck typing)* (peps.python.org/pep-0544); Brett Slatkin, *Effective Python, Third Edition*, item on accepting functions and simple interfaces before classes.
 
 ## Trigger condition
 
@@ -32,7 +32,7 @@ from typing import Protocol
 class Archiver(Protocol):
     def archive(self, files: list[str]) -> bool: ...
 
-# DiskArchiver needs no import of Archiver — structural match is implicit
+# DiskArchiver needs no import of Archiver; structural match is implicit
 class DiskArchiver:
     def archive(self, files: list[str]) -> bool:
         return True

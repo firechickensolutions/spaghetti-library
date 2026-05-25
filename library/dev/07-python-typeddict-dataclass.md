@@ -4,7 +4,7 @@
 
 **Rework-prevention rationale:** Prevents imaginary extensibility and defensive accumulation by distinguishing JSON-like boundary shapes (TypedDict) from Python-owned domain records (dataclass) instead of using plain dicts throughout or converting everything into classes.
 
-**Canonical source:** Ivan Levkivskyi and contributors, *PEP 589 — TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys* (peps.python.org/pep-0589); Eric V. Smith, *PEP 557 — Data Classes* (peps.python.org/pep-0557).
+**Canonical source:** Ivan Levkivskyi and contributors, *PEP 589, TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys* (peps.python.org/pep-0589); Eric V. Smith, *PEP 557, Data Classes* (peps.python.org/pep-0557).
 
 ## Trigger condition
 
@@ -14,7 +14,7 @@ Halt and read this entry when a plain `dict` with fixed keys is being passed bet
 
 | If the value... | Use |
 |---|---|
-| Arrives from or goes to JSON, an API, a config file, or a database row | `TypedDict` — stays a dict, serializes without conversion |
+| Arrives from or goes to JSON, an API, a config file, or a database row | `TypedDict`: stays a dict, serializes without conversion |
 | Is a Python-owned domain record that benefits from construction, attribute access, equality, defaults, frozen semantics, or methods | `@dataclass` |
 
 ## Before
@@ -26,7 +26,7 @@ def enqueue(job: dict) -> None:
     submit(run_id, retries)
 ```
 
-## After — boundary payload (TypedDict)
+## After: boundary payload (TypedDict)
 
 ```python
 from typing import TypedDict
@@ -39,7 +39,7 @@ def enqueue(job: JobPayload) -> None:
     submit(job["run_id"], job["retries"])   # key access is type-checked
 ```
 
-## After — Python domain record (dataclass)
+## After: Python domain record (dataclass)
 
 ```python
 from dataclasses import dataclass

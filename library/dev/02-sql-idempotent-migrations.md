@@ -14,7 +14,7 @@ Halt and read this entry when about to seed lookup rows, rerunnable migration da
 
 ```sql
 -- REPLACE silently deletes the existing row first, triggering ON DELETE CASCADE
--- on any child tables — data loss on rerun
+-- on any child tables: data loss on rerun
 INSERT OR REPLACE INTO status_lookup (code, label)
 VALUES ('READY', 'Ready');
 ```

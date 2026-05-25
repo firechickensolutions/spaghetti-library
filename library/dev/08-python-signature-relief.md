@@ -2,7 +2,7 @@
 
 **Language(s):** Python
 
-**Rework-prevention rationale:** Prevents premature abstraction and defensive accumulation by replacing long positional signatures — which callers cannot safely read or reorder — with explicit named contracts.
+**Rework-prevention rationale:** Prevents premature abstraction and defensive accumulation by replacing long positional signatures, which callers cannot safely read or reorder, with explicit named contracts.
 
 **Canonical source:** Dustin Boswell and Trevor Foucher, *The Art of Readable Code*, Chapter 3 "Names That Can't Be Misconstrued" and Chapter 7 "Making Control Flow Easy to Read"; David Beazley and Brian K. Jones, *Python Cookbook, Third Edition*, recipes on keyword-only arguments.
 
@@ -19,7 +19,7 @@ def deploy(name, path, env, dry_run, retries):
     return apply(name, path, env, retries)
 ```
 
-## After — parameter object (preferred when fields travel together)
+## After: parameter object (preferred when fields travel together)
 
 ```python
 from dataclasses import dataclass
@@ -39,7 +39,7 @@ def deploy(request: DeployRequest) -> Result:
     return apply(request)
 ```
 
-## After — keyword-only (preferred for independent scalar flags)
+## After: keyword-only (preferred for independent scalar flags)
 
 ```python
 def deploy(name: str, path: Path, *, env: str, dry_run: bool = False, retries: int = 3) -> Result:
@@ -53,6 +53,6 @@ def deploy(name: str, path: Path, *, env: str, dry_run: bool = False, retries: i
 | Parameters form a coherent record that travels as a unit | `@dataclass` parameter object |
 | Parameters are independent scalars and callers name them explicitly | Keyword-only (`*` separator) |
 | Parameters are a JSON-like payload from an external boundary | `TypedDict` (see entry 07) |
-| Parameters are a forwarded open-ended call | `**kwargs` — only for genuine forwarding |
+| Parameters are a forwarded open-ended call | `**kwargs`: only for genuine forwarding |
 
 **Never use `*args`/`**kwargs` to "solve" a long signature.** It hides the contract rather than fixing it. The agent's instinct to add `**kwargs` for "flexibility" is the failure mode this entry prevents.

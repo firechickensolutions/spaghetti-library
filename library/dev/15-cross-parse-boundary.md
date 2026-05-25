@@ -44,7 +44,7 @@ def price_total(order: Order) -> Money:
     return sum(item.price for item in order.items)
 ```
 
-**The rule:** validate and parse raw input at the ingress boundary into domain-shaped values. Inside the domain core, enforce business preconditions and invariants — but do not re-check transport shape, key existence, or raw types unless the data has crossed a trust boundary again.
+**The rule:** validate and parse raw input at the ingress boundary into domain-shaped values. Inside the domain core, enforce business preconditions and invariants, but do not re-check transport shape, key existence, or raw types unless the data has crossed a trust boundary again.
 
 **"Shotgun parsing" is the failure mode** (King's term): spreading transport-shape validation throughout processing code instead of concentrating it at the boundary. AI agents produce shotgun parsing because each function defensively re-validates its inputs rather than trusting what the boundary already enforced.
 
@@ -53,11 +53,11 @@ def price_total(order: Order) -> Money:
 ```ts
 // Boundary
 function parseOrder(raw: unknown): Order {
-  const data = orderSchema.parse(raw);   // zod/valibot/custom — one place
+  const data = orderSchema.parse(raw);   // zod/valibot/custom: one place
   return { items: data.items.map(parseLineItem) };
 }
 
-// Domain core — Order is already typed, no raw checks
+// Domain core: Order is already typed, no raw checks
 function priceTotal(order: Order): number {
   return order.items.reduce((sum, item) => sum + item.price, 0);
 }

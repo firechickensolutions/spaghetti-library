@@ -49,4 +49,4 @@ function label(task: Task): string {
 
 **Why `assertNever`:** the `default` branch with `assertNever` makes the exhaustiveness check explicit. If a new variant is added to `Task` and the `switch` is not updated, the compiler errors on the `assertNever(task)` call because `task` is no longer `never`.
 
-**Optional fields create impossible states:** `{ isLoading?: boolean; data?: T; error?: Error }` allows `{ isLoading: true, data: user, error: new Error() }` — a state that cannot exist in the real system but is valid to the type checker. Discriminated unions eliminate the impossible combinations.
+**Optional fields create impossible states:** `{ isLoading?: boolean; data?: T; error?: Error }` allows `{ isLoading: true, data: user, error: new Error() }`: a state that cannot exist in the real system but is valid to the type checker. Discriminated unions eliminate the impossible combinations.

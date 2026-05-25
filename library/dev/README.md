@@ -1,6 +1,6 @@
-# Dev Library — Routing Index
+# Dev Library -- Routing Index
 
-Agent-consumable pattern corpus for Forge. Each entry is self-contained: read one entry, apply the pattern, resume. The `/dev` skill at `C:\Forge\skills\dev\SKILL.md` carries the full trigger routing protocol.
+Agent-consumable pattern corpus. Each entry is self-contained: read one entry, apply the pattern, resume. The `/dev` skill at `skills/dev/SKILL.md` carries the full trigger routing protocol.
 
 ## Trigger table
 
@@ -29,8 +29,8 @@ Every entry carries six fields: pattern name, language(s), rework-prevention rat
 
 ## Growth protocol
 
-New entries are added at slice-close when a resolved blip reveals a repeatable pattern. Add a numbered file, add a row here and in `skills/dev/SKILL.md`. A pattern earns an entry after it prevented rework — not before.
+New entries are added when a resolved rework event reveals a repeatable pattern. Add a numbered file, add a row here and in `skills/dev/SKILL.md`. A pattern earns an entry after it prevented rework, not before.
 
 ## Research basis
 
-`C:\Firechicken Solutions\research\2026-05-25-dev-best-practices.md` — three-pass research thread (Gemini breadth, ChatGPT audit, ChatGPT third-pass adversarial). Auth & Permissions entries pending a separate ChatGPT-only three-pass thread.
+Entries 01-16 come from a three-pass research thread: Gemini breadth pass, ChatGPT adversarial audit, ChatGPT third-pass. Auth and Permissions entries (17-19) pending a separate ChatGPT-only three-pass thread.

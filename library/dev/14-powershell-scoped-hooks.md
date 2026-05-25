@@ -47,7 +47,7 @@ try {
     Write-Verbose "Build succeeded."
 }
 catch {
-    $err = $_    # clone immediately — subsequent commands overwrite $_
+    $err = $_    # clone immediately: subsequent commands overwrite $_
     Write-Error "Hook failed: $($err.Exception.Message)"
     exit 1
 }
@@ -63,7 +63,7 @@ finally {
 |---|---|---|
 | `$?` | Last PowerShell cmdlet pipe success | Cmdlets (`Get-Item`, `Copy-Item`, etc.) |
 | `$LASTEXITCODE` | Exit code of the last native executable | `node`, `npm`, `git`, `gcc`, compiled tools |
-| `$ErrorActionPreference = "Stop"` | Converts non-terminating PS errors to terminating | Must be scoped — save and restore in `finally` |
+| `$ErrorActionPreference = "Stop"` | Converts non-terminating PS errors to terminating | Must be scoped: save and restore in `finally` |
 | `Push-Location` / `Pop-Location` | Manages working directory as a stack | Any hook that must `cd` without mutating the caller |
 
 **`$_` clone rule:** inside a `catch` block, assign `$_ ` to a local variable immediately. Any subsequent PowerShell command (including `Write-Error`) can overwrite `$_` with a new error object, hiding the original exception.
