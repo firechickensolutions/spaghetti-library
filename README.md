@@ -1,14 +1,14 @@
 # Spaghetti Library
 
-A sourced pattern library for AI-assisted code generation. Each entry is a failure mode AI agents introduce, the sourced fix, and the specific trigger condition that tells an agent to halt and read before continuing.
+19 sourced patterns for AI-assisted code generation. Each one is a failure mode agents introduce reliably, the fix with a verifiable source, and a trigger condition specific enough to stop generation before the damage lands.
 
-This is not a style guide. It is a corpus built to reduce rework. Code that comes out less wrong on the first pass.
+## Why it exists
 
-## Why this exists
+Vibe coding removed the access moat. It did not change what a shipped product needs to survive production, and it did not change the fact that AI agents fail in predictable ways. Every team re-researches the same failure modes, re-learns the same patterns, and cleans up the same classes of generated code, and none of it gets written down somewhere others can use it.
 
-Vibe coding removed the access moat. It did not change what a shipped product needs to survive production. Every team using AI-assisted generation is re-researching the same patterns, re-learning the same failure modes, and cleaning up the same classes of generated code. This library is the shared ground.
+This is that place.
 
-The patterns here are sourced from PEPs, official language documentation, named practitioner texts, and peer-reviewed research. Every entry stands alone. Read it, apply it, move on.
+The patterns here are sourced from PEPs, official language documentation, named practitioner texts, and peer-reviewed research, because an agent that reads a sourced entry before generating is less likely to re-introduce the failure than one reading a rule someone made up. Every entry stands alone. Read it, apply it, move on.
 
 ## System Scaffold
 
@@ -35,7 +35,10 @@ spaghetti-library/
 │       ├── 13-react-state-colocation.md
 │       ├── 14-powershell-scoped-hooks.md
 │       ├── 15-cross-parse-boundary.md
-│       └── 16-cross-cognitive-chunking.md
+│       ├── 16-cross-cognitive-chunking.md
+│       ├── 17-python-composition-root-creds.md
+│       ├── 18-python-boundary-permission-gate.md
+│       └── 19-python-refresh-and-reauthorize.md
 └── skills/
     └── dev/
         └── SKILL.md            The /dev routing skill
@@ -43,22 +46,9 @@ spaghetti-library/
 
 ## How to use it
 
-### As a human developer
+Load `skills/dev/SKILL.md` at the start of a code-writing task. The skill checks the trigger table before generation and halts when a condition fires. If you prefer to drive it yourself, the same trigger table lives in `library/dev/README.md`: when you're about to write something that matches a trigger, read the entry before writing.
 
-Read the trigger table in `library/dev/README.md`. When you're about to write something that matches a trigger condition, read the entry before writing.
-
-### As an AI agent
-
-Load `skills/dev/SKILL.md` at the start of any code-writing task. Check the trigger table. When a trigger fires, halt, read the entry, apply the pattern, resume.
-
-### Extending it
-
-When you resolve a rework event and the fix reveals a repeatable pattern:
-1. Create a new numbered entry in `library/dev/` using the 6-field format
-2. Add a row to the trigger table in `library/dev/README.md` and `skills/dev/SKILL.md`
-3. Cite the source: PEP number, official docs page, named book with author and section
-
-A pattern earns an entry after it prevented rework, not before.
+To add an entry: when a rework event reveals a repeatable pattern, create a numbered file in `library/dev/` using the 6-field format, add a row to both trigger tables, and cite the source. PEP number, official docs page, named book with author and section. A pattern earns a slot after it prevented rework, not before.
 
 ## Entry format
 
@@ -73,12 +63,7 @@ Every entry carries six fields:
 
 ## Research basis
 
-The 16 entries in this library come from a three-pass research thread:
-- Pass 1: Gemini Deep Research (breadth across Python, TypeScript, PowerShell, SQL)
-- Pass 2: ChatGPT adversarial audit (sourcing verification, technical accuracy, coverage gaps)
-- Pass 3: ChatGPT third-pass (corrections to the audit, missing patterns, sound examples)
-
-Three auth and permissions entries (17-19) landed from a separate ChatGPT-only three-pass thread.
+Entries 01-16 came from a three-pass thread: Gemini breadth pass, ChatGPT adversarial audit, ChatGPT third-pass. The auth and permissions entries (17-19) came from a separate ChatGPT-only three-pass thread; Pass 2 caught a P0 in entry 18 before it landed, and Pass 3 resolved two undefined class names in entry 19. Both corrections were folded before the entries were written.
 
 ## What this is not
 
