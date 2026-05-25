@@ -46,7 +46,9 @@ spaghetti-library/
 
 ## How to use it
 
-Load `skills/dev/SKILL.md` at the start of a code-writing task. The skill checks the trigger table before generation and halts when a condition fires. If you prefer to drive it yourself, the same trigger table lives in `library/dev/README.md`: when you're about to write something that matches a trigger, read the entry before writing.
+If you're using a CLAUDE.md-aware agent (Claude Code or any tool that loads `CLAUDE.md`), the trigger table fires automatically — the skill is invoked before generation starts, not after. The `CLAUDE.md` in this repo wires it.
+
+If you're driving it manually, load `skills/dev/SKILL.md` at the start of a code-writing task, or read the trigger table in `library/dev/README.md` directly: when you're about to write something that matches a trigger, read the entry before writing.
 
 To add an entry: when a rework event reveals a repeatable pattern, create a numbered file in `library/dev/` using the 6-field format, add a row to both trigger tables, and cite the source. PEP number, official docs page, named book with author and section. A pattern earns a slot after it prevented rework, not before.
 
