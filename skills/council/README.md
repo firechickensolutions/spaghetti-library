@@ -13,7 +13,10 @@ This folder contains:
 - `SKILL.md` - the actual agent skill. This is what a code agent reads.
 - `README.md` - this human setup guide.
 
-There are no packages to install and no API keys required. The skill is a reusable thinking workflow.
+There are two ways to use it:
+
+- **Manual prompt pattern:** no package install and no API key. Paste `SKILL.md` into a chat tool and run the roles by hand.
+- **Automated multi-model council:** requires whatever runner/agent you use plus an `OPENROUTER_API_KEY` for the panel models. The final judge can still be your paid Claude, ChatGPT, Codex, CoWork, or other trusted subscription surface.
 
 ## Download it
 
@@ -64,6 +67,14 @@ I want Builder, Skeptic, Operator, and Judge roles.
 
 For code agents that support subagents, the council works best when each role is run independently and the judge sees their outputs afterward. If your agent does not support subagents, it can still run the roles sequentially in one conversation.
 
+If your council runner calls multiple hosted models through OpenRouter, set your OpenRouter key in the environment or secret manager your agent uses:
+
+```text
+OPENROUTER_API_KEY=...
+```
+
+Keep that key out of source control. The skill is instructions; the actual key handling belongs to your agent or runner.
+
 ## Use it in Claude Chat, ChatGPT, or CoWork-style tools
 
 Chat-only tools may not automatically load a skill folder. Use the skill manually:
@@ -94,7 +105,7 @@ For stronger independence, run the roles in separate chats or different subscrib
 
 ## What "subscription-backed judge" means
 
-The council pattern was inspired by OpenRouter's model-comparison flow, but the judge does not need to run through OpenRouter. If you already pay for Claude, ChatGPT, Codex, CoWork, or another trusted model surface, use that as the judge.
+The council pattern was inspired by OpenRouter's model-comparison flow, and an automated council may use OpenRouter API calls for the panel models. The judge does not have to run through OpenRouter. If you already pay for Claude, ChatGPT, Codex, CoWork, or another trusted model surface, use that as the judge.
 
 The important idea is:
 

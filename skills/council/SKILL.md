@@ -9,7 +9,7 @@ Use a council when one answer is likely to be overconfident, under-explored, or 
 
 ## Core rule
 
-The judge should run where the operator already has an active subscription or trusted account. Do not assume OpenRouter or any external router is available. OpenRouter's model-comparison UX is the inspiration; the implementation should prefer the user's own subscribed surface for the final judge when possible.
+OpenRouter is a normal way to run the panel models in an automated council and requires the operator's `OPENROUTER_API_KEY`. The judge should run where the operator already has an active subscription or trusted account when possible. Do not route the final judge through OpenRouter just because the panel used it.
 
 ## Workflow
 
@@ -66,7 +66,8 @@ Return a final recommendation, the reason, the biggest residual risk, and the ne
 - Do not count votes. A single correct objection can outweigh four agreeing answers.
 - Do not let a role invent sources. Source-grounded roles must cite the evidence they used.
 - Do not use council theater for simple work. If the task is obvious, answer directly.
-- Do not send private or customer data to an external model/router unless the user has approved that boundary.
+- Do not send private or customer data to OpenRouter or any external model/router unless the user has approved that boundary.
+- Do not ask the user to paste API keys into chat. Use the agent's environment or secret manager.
 - Keep the final recommendation decisive. The council exists to improve judgment, not to produce a mushy compromise.
 
 ## Code-agent usage
