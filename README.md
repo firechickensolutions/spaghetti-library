@@ -1,6 +1,6 @@
 # Spaghetti Library
 
-19 sourced patterns for AI-assisted code generation. Each one is a failure mode agents introduce reliably, the fix with a verifiable source, and a trigger condition specific enough to stop generation before the damage lands.
+19 sourced patterns for AI-assisted code generation, plus reusable agent skills. Each pattern is a failure mode agents introduce reliably, the fix with a verifiable source, and a trigger condition specific enough to stop generation before the damage lands.
 
 ## Why it exists
 
@@ -19,38 +19,50 @@ spaghetti-library/
 │   └── README.md               System architecture, failure modes, growth protocol
 ├── library/
 │   └── dev/
-│       ├── README.md           Trigger routing table
-│       ├── 01-sql-bitemporal-strict.md
-│       ├── 02-sql-idempotent-migrations.md
-│       ├── 03-python-structural-protocols.md
-│       ├── 04-python-typeis-narrowing.md
-│       ├── 05-python-resource-boundaries.md
-│       ├── 06-python-lazy-generators.md
-│       ├── 07-python-typeddict-dataclass.md
-│       ├── 08-python-signature-relief.md
-│       ├── 09-python-idempotency-guards.md
-│       ├── 10-ts-exhaustive-unions.md
-│       ├── 11-ts-react-union-state.md
-│       ├── 12-react-hook-ordering.md
-│       ├── 13-react-state-colocation.md
-│       ├── 14-powershell-scoped-hooks.md
-│       ├── 15-cross-parse-boundary.md
-│       ├── 16-cross-cognitive-chunking.md
-│       ├── 17-python-composition-root-creds.md
-│       ├── 18-python-boundary-permission-gate.md
-│       └── 19-python-refresh-and-reauthorize.md
+│       ├── README.md           Trigger routing table for /dev
+│       └── 01-19-*.md          Sourced code-generation patterns
 └── skills/
-    └── dev/
-        └── SKILL.md            The /dev routing skill
+    ├── README.md               Index of installable skills
+    ├── dev/
+    │   └── SKILL.md            Routes code-writing tasks to library/dev entries
+    └── council/
+        ├── SKILL.md            Multi-role council + subscription-backed judge workflow
+        └── README.md           Human setup and usage guide
 ```
 
 ## How to use it
 
-If you're using a CLAUDE.md-aware agent (Claude Code or any tool that loads `CLAUDE.md`), the trigger table fires automatically — the skill is invoked before generation starts, not after. The `CLAUDE.md` in this repo wires it.
+Clone the repo:
+
+```bash
+git clone https://github.com/firechickensolutions/spaghetti-library.git
+```
+
+### Use the /dev pattern library
+
+If you're using a CLAUDE.md-aware agent (Claude Code or any tool that loads `CLAUDE.md`), the `/dev` trigger table fires automatically: the skill is invoked before generation starts, not after. The `CLAUDE.md` in this repo wires it.
 
 If you're driving it manually, load `skills/dev/SKILL.md` at the start of a code-writing task, or read the trigger table in `library/dev/README.md` directly: when you're about to write something that matches a trigger, read the entry before writing.
 
 To add an entry: when a rework event reveals a repeatable pattern, create a numbered file in `library/dev/` using the 6-field format, add a row to both trigger tables, and cite the source. PEP number, official docs page, named book with author and section. A pattern earns a slot after it prevented rework, not before.
+
+### Use an installable skill
+
+Each folder under `skills/` is a standalone skill. Browse the skill index at `skills/README.md`, copy the folder you want into your agent's skill directory, or paste its `SKILL.md` into tools that support custom instructions.
+
+Common Codex-style install path:
+
+```text
+~/.codex/skills/<skill-name>
+```
+
+For example, copy `skills/council/` to `~/.codex/skills/council/`, then start a new session and ask:
+
+```text
+Use the council skill to pressure-test this decision.
+```
+
+See each skill's README for user-facing setup notes.
 
 ## Entry format
 
