@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Local config + secrets
+.env
+
+# Captured audio (never commit) + local library/index
+*.pcm
+*.pcm.failed
+.library/
+
+# A local notes vault if you keep it inside the repo
+ShowerThoughts/
+notes/

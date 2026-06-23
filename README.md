@@ -21,13 +21,15 @@ spaghetti-library/
 │   └── dev/
 │       ├── README.md           Trigger routing table for /dev
 │       └── 01-19-*.md          Sourced code-generation patterns
-└── skills/
-    ├── README.md               Index of installable skills
-    ├── dev/
-    │   └── SKILL.md            Routes code-writing tasks to library/dev entries
-    └── council/
-        ├── SKILL.md            Multi-role council + subscription-backed judge workflow
-        └── README.md           Human setup and usage guide
+├── skills/
+│   ├── README.md               Index of installable skills
+│   ├── dev/
+│   │   └── SKILL.md            Routes code-writing tasks to library/dev entries
+│   └── council/
+│       ├── SKILL.md            Multi-role council + subscription-backed judge workflow
+│       └── README.md           Human setup and usage guide
+└── shower-thoughts/            Example tool: push a button, speak a thought, get a searchable local note
+    └── README.md               What it is, install, and how it works
 ```
 
 ## How to use it

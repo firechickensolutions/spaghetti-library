@@ -1,0 +1,40 @@
+[project]
+name = "shower-thoughts"
+version = "0.1.0"
+description = "Push a button, speak a thought, get a coherent Markdown note. 100% local: audio never leaves your machine."
+requires-python = ">=3.11"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+dependencies = [
+    "pydantic>=2.9",
+    "ollama>=0.4",
+    "numpy>=1.26",
+    "onnx-asr>=0.11",
+    "onnxruntime>=1.20",
+    # Mic capture is Windows WASAPI (PyAudioWPatch). audioop was removed from the
+    # stdlib in 3.13 (PEP 594); audioop-lts is the maintained backport.
+    "PyAudioWPatch>=0.2.12.7; sys_platform == 'win32'",
+    "audioop-lts; python_version >= '3.13'",
+]
+
+[project.optional-dependencies]
+# Opt into GPU decode. onnxruntime and onnxruntime-gpu conflict — uninstall the
+# CPU one first: pip uninstall onnxruntime, then pip install -e .[gpu], and set
+# SHOWER_PARAKEET_PROVIDERS=CUDAExecutionProvider,CPUExecutionProvider
+gpu = [
+    "onnxruntime-gpu>=1.20",
+    "nvidia-cublas-cu12",
+    "nvidia-cudnn-cu12",
+    "nvidia-cuda-runtime-cu12",
+    "nvidia-cuda-nvrtc-cu12",
+]
+dev = ["pytest>=8.3", "ruff>=0.8"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
