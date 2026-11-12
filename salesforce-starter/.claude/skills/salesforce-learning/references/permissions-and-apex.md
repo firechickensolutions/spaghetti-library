@@ -19,11 +19,12 @@ These checks capture recurring lessons from building and repairing Salesforce fe
 |---|---|
 | It works as an admin but fails for the intended user | Reproduce through the same page as that user. Check app/page access, object permissions, field permissions, and record sharing independently. Avoid fixing a narrow failure by granting administrator, View All, or Modify All access. |
 | A field still appears after you omit it from one permission set | Access is additive. Review the profile, other permission sets, and permission set groups; omission from one grant does not revoke another grant. |
+| The record header loads but its Details panel errors for a minimum-access user | Check the profile and record type’s page-layout assignment. Assign a suitable existing layout on a dedicated test profile if necessary; extra object or field grants do not repair a missing layout. |
 | The component appears but its Apex call is denied | Check Apex class access separately from the records and fields the method reads. A visible component is not an authorization grant. |
 | Existing access changes after a metadata deployment | Compare the complete permission set and dependencies with the target before deployment. A partial permission-set payload can remove omitted grants. Preserve and test the intended existing access. |
 | Optional related fields disappear, or the entire query fails | Distinguish a field the user cannot read from a relationship or object absent from that user's schema. Inspect the actual response and schema; do not widen access just to make the query succeed. |
 
-Keep the failed case in the test or release notes with synthetic data so the same mistake is caught next time. The permission and schema checks above use the linked Salesforce documentation; the deployed-user exercise is the proof for the target org.
+The [minimum-access layout issue](https://help.salesforce.com/s/articleView?id=005299592&language=en_US&type=1) was reproduced and repaired during this starter’s live permission rehearsal. Keep the failed case in the test or release notes with synthetic data so the same mistake is caught next time. The permission and schema checks above use the linked Salesforce documentation; the deployed-user exercise is the proof for the target org.
 
 ## Use the saved API version when reading Apex
 
