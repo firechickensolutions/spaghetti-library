@@ -6,54 +6,33 @@ In a real design, first check whether an existing view or configuration meets th
 
 ## Copy the example into your project
 
-Complete [setup](setup.md) first. In VS Code Explorer, open the DX project that contains `sfdx-project.json`. Copy the entire [relatedActivityBoard](../assets/relatedActivityBoard/) folder into `force-app/main/default/lwc`. Create the `lwc` directory if it’s missing. If your package directory differs, substitute it in the path and commands. Check that the board name is fresh in the project and learning org before copying or deploying.
+Complete the tool and local-project steps in [setup](setup.md) first. You can copy and test the component before signing in to Salesforce.
+
+1. In the **starter** VS Code window, expand `.claude → skills → salesforce-learning → assets`. Right-click the entire `relatedActivityBoard` folder and choose **Copy**.
+2. In the **lab** window, expand `force-app → main → default`. Select its `lwc` folder and **Paste**. Create `lwc` if the template does not include it. Check that no `relatedActivityBoard` folder already exists there before pasting; ask Claude to inspect an existing copy instead of replacing it.
+3. Confirm the result below. Copy the folder once, so there is no extra `relatedActivityBoard/relatedActivityBoard` nesting. The files are already complete; you do not need to paste code from GitHub or create a new component with the wizard.
+
+```text
+salesforce-learning-lab/
+  sfdx-project.json
+  package.json
+  force-app/main/default/lwc/relatedActivityBoard/
+    relatedActivityBoard.js
+    relatedActivityBoard.html
+    relatedActivityBoard.css
+    relatedActivityBoard.js-meta.xml
+    __tests__/relatedActivityBoard.test.js
+```
+
+You can also ask Claude: “Copy the supplied `relatedActivityBoard` folder from this starter's `.claude/skills/salesforce-learning/assets` into the lab's `force-app/main/default/lwc`, preserving any existing work, then check the five files.” If your package directory differs from `force-app`, substitute it consistently.
 
 Keep Claude open in the starter folder and ask it to inspect the copied component in the DX project. Have it explain the HTML and CSS that lay out the board, the JavaScript that reads and groups records, the XML that exposes the board and its settings in App Builder, and the Jest file that tests the user-visible behavior. Use the supplied source as your baseline.
 
 The board queries the **first 50 Tasks visible to the signed-in user**, sorted by Status and record ID, and groups the results into columns. The counts reflect loaded cards. A notice appears if more Tasks are available. This view uses its own query and scope. The two read queries fetch Tasks and their permitted Related To links, then request optional Case details in one batch for the visible Case IDs. The batch may return fewer details than requested and the Task cards remain useful in that case. [GraphQL record and optional-field behavior](https://developer.salesforce.com/docs/platform/graphql/guide/query-record-objects.html) · [Task and Event API support](https://developer.salesforce.com/docs/platform/graphql/guide/query-limits.html)
 
-## Preview, validate, and deploy the bundle
-
-From the folder with `sfdx-project.json`, confirm the alias maps to your learning org. Use the installed CLI help for `sf project deploy preview`, `sf project deploy start`, and `sf project deploy report`. Each command below is a separate step.
-
-**Preview the bundle.** Investigate unexpected files, deletes, name collisions, and conflicts. Some learning orgs lack source tracking. Check the target’s existing metadata if preview can’t show conflicts.
-
-```text
-sf project deploy preview --source-dir force-app/main/default/lwc/relatedActivityBoard --target-org sf-learning
-```
-
-**Validate in the learning org.** The dry run checks server deployment without saving the metadata. Wait for the job to finish. The LWC’s Jest tests run locally in a later step.
-
-```text
-sf project deploy start --dry-run --source-dir force-app/main/default/lwc/relatedActivityBoard --target-org sf-learning --api-version 68.0 --wait 10
-```
-
-**Deploy after confirming the change and target.** Verify the alias again and apply the same bundle.
-
-```text
-sf project deploy start --source-dir force-app/main/default/lwc/relatedActivityBoard --target-org sf-learning --api-version 68.0 --wait 10
-```
-
-If a command returns before the job finishes, substitute its ID for `DEPLOY_JOB_ID` and check the result before trying another deployment.
-
-```text
-sf project deploy report --job-id DEPLOY_JOB_ID --target-org sf-learning --wait 10
-```
-
-[Preview](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_preview.html) · [Validate and deploy](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html) · [Report job status](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_report.html)
-
-## See the board as two users
-
-1. Create a synthetic Case with a distinguishable value in **Priority** and at least two synthetic Tasks in different statuses. Set one Task’s **Related To** field to the Case. Leave the other Task’s Related To blank. Use the statuses and required fields available in the learning org.
-2. In **Setup → Lightning App Builder**, create an **App Page** named **Practice Activity Board** with a single region. Drag **Related Activity Board** from Custom Components. Use its settings to choose Case number, status, and priority. Save, activate, and add the page to an app available to your two test users. Use a dedicated learning app or pilot assignment where available. [Lightning App Page setup](https://trailhead.salesforce.com/content/learn/modules/lightning_app_builder/lightning_app_builder_apphome) · [App Builder properties](https://developer.salesforce.com/docs/platform/lwc/guide/targets-lightning-app-page.html)
-3. In Lightning Experience, confirm the Tasks are in the right columns, the counts match, and the Task and related record buttons open the expected records. Enable **Show case priority** and confirm the allowed user sees the synthetic value. Disable it, save the page, and confirm the field row goes away. Re-enable it for the permission check. Change a synthetic Task’s status from its regular record page and select **Refresh** on the board. The card should move to the new column.
-4. Use a non-admin test user who can reach the app, Task, and Case, with effective Case Status read access and **no** Case Priority read access. If a suitable license is available, use a dedicated training user with a minimal profile and narrowly scoped access. Check the combined profile, permission sets, and groups. Open the same board in that user’s browser session or use Salesforce’s supported **Login** action for the training user. The Task and permitted Case details should remain, while Case Priority is absent. If Priority’s field permission can’t be narrowed for this user, record the field check as pending or adapt the board to a field you can verify. Check an inaccessible Case or an omitted parent separately. Salesforce’s activity access rules can also hide the Task itself. Compare with what the same user can open through standard Salesforce. Record any untested case as pending. [Field permissions](https://help.salesforce.com/s/articleView?id=sf.users_profiles_field_perms.htm&type=5) · [Activity access](https://help.salesforce.com/s/articleView?id=sales.activities_view.htm&language=en_US&type=5)
-
-Check the learning org’s API 68.0 GraphQL schema for the intended viewers. Confirm `Task`, the `Task.What` relationship, and the related record fields the board uses. Salesforce builds the schema from the user’s permissions and supported objects. If `Task.What` is absent, the Task query can fail even with `@optional` and needs to be adapted to that schema. When the Task query succeeds, the separate Case query can fail or omit data and the Task cards remain visible with a notice. A dry run checks metadata deployment. Verify the actual board with the two users to check the queries and access. [GraphQL schema and record access](https://developer.salesforce.com/docs/platform/graphql/guide/query-record-objects.html) · [Polymorphic relationships](https://developer.salesforce.com/docs/platform/graphql/guide/filter-polymorphic.html) · [GraphQL query command](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_api_request_graphql.html)
-
 ## Run the bundled local tests
 
-From the DX project folder, check `node --version` and `npm --version`. The standalone Salesforce CLI has its own Node runtime. For the local tests, install a current supported patch of [Node.js 24 LTS](https://nodejs.org/en/download) and use it in your shell. The sample was tested with Node.js 24.12.0 and the pinned Jest and LWC engine versions below. Use `npm.cmd` in place of `npm` if PowerShell blocks the npm script shim.
+In the **lab** window, choose **Terminal → New Terminal**. Confirm that `sfdx-project.json` is at this folder level, then check `node --version` and `npm --version`. The standalone Salesforce CLI has its own Node runtime. For the local tests, install a current supported patch of [Node.js 24 LTS](https://nodejs.org/en/download) and use it in your shell. The local walkthrough was rehearsed with a fresh standard project generated by Salesforce CLI 2.158.7, Node.js 24.12.0, and the pinned Jest and LWC engine versions below. Use `npm.cmd` in place of `npm` if PowerShell blocks the npm script shim.
 
 Run the install once in the new DX project and keep the resulting lockfile. The standard project template provides the `test:unit` script and Jest config. Check that `.forceignore` excludes local tests with `**/__tests__/**`.
 
@@ -65,7 +44,63 @@ npm install --save-dev --save-exact @salesforce/sfdx-lwc-jest@7.9.0 @lwc/engine-
 npm run test:unit
 ```
 
+**Expected:** one passing test suite and **8 passing tests**, followed by the terminal prompt. The tests create fake responses in memory; they do not connect to an org or create Salesforce records. The install can take several minutes. If it fails, ask Claude to inspect the error before changing package versions. Do not use `npm audit fix --force` as an automatic setup fix.
+
+**If npm prints warnings:** deprecation messages and security advisories are different from a failed install. In the fresh-project rehearsal, npm reported 19 advisories (14 low, 5 moderate) in local development tools; none were high or critical. The converted Salesforce bundle contained only the four component files, with tests and `node_modules` excluded. Those findings still matter when running tools locally. Ask Claude to review `npm audit`, evaluate compatible fixes with the tests, and record unresolved findings. Do not feed untrusted projects or files into affected tools. Recheck before a production release; a passing test suite does not establish dependency security. [npm audit](https://docs.npmjs.com/cli/v11/commands/npm-audit)
+
+If npm reports a missing `package.json` or test script, check that the terminal is inside the generated standard project. If Jest reports no tests, check the copied `__tests__` folder against the tree above.
+
 The supplied tests use synthetic wire data for grouping, field choices, missing or denied data, the training cap, and refresh. Verify org access separately in the browser. [Install Jest](https://developer.salesforce.com/docs/platform/lwc/guide/unit-testing-using-jest-installation.html) · [Run Jest](https://developer.salesforce.com/docs/platform/lwc/guide/unit-testing-using-jest-run-tests.html)
+
+## Preview, validate, and deploy the bundle
+
+Finish the learning-org sign-in and identity check in [setup](setup.md#choose-and-verify-your-learning-org) and get passing local tests first. In the **lab** terminal, confirm the alias maps to your learning org. Use the installed CLI help for `sf project deploy preview`, `sf project deploy start`, and `sf project deploy report`. Each command below is a separate step.
+
+**Preview the bundle.** Investigate unexpected files, deletes, name collisions, and conflicts. Developer Edition orgs do not support source tracking, so preview cannot establish whether you would overwrite an existing component. Ask Claude to check the target metadata for a name collision before deployment; do not treat a missing conflict report as an empty org. [Source tracking limits](https://developer.salesforce.com/docs/platform/sfdx-dev/guide/sfdx-setup-enable-source-tracking-sandboxes.html)
+
+```text
+sf project deploy preview --source-dir force-app/main/default/lwc/relatedActivityBoard --target-org sf-learning
+```
+
+**Validate in the learning org.** The dry run checks server deployment without saving the metadata. Wait for the job to finish. This is separate from the local Jest tests you just ran.
+
+```text
+sf project deploy start --dry-run --source-dir force-app/main/default/lwc/relatedActivityBoard --target-org sf-learning --api-version 68.0 --wait 10
+```
+
+**Expected after validation:** the command reaches terminal status `Succeeded` for `relatedActivityBoard`, with no deployment errors. If validation fails, stop here and ask Claude to explain the error. An operation still in progress is not success.
+
+**Deploy after confirming the change and target.** Verify the alias again and apply the same bundle.
+
+```text
+sf project deploy start --source-dir force-app/main/default/lwc/relatedActivityBoard --target-org sf-learning --api-version 68.0 --wait 10
+```
+
+**Expected after deployment:** status `Succeeded` for the same bundle. You still need to place it on a page; deploying the files does not create a tab automatically.
+
+If a command returns before the job finishes, substitute its ID for `DEPLOY_JOB_ID` and check the result before trying another deployment.
+
+```text
+sf project deploy report --job-id DEPLOY_JOB_ID --target-org sf-learning --wait 10
+```
+
+[Preview](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_preview.html) · [Validate and deploy](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html) · [Report job status](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_report.html)
+
+## Create practice records and open the board
+
+1. In the practice org, open **Cases** from the App Launcher and create a Case with Subject **Practice delivery question**. Choose a Priority you can recognize and fill the required fields. In **Tasks**, create **Practice: check sample case**, assigned to yourself, with **Related To** set to that Case. Create **Practice: prepare follow-up**, also assigned to yourself, with Related To blank. Choose two available Task statuses. Use only fictional data. Existing sample Tasks can also appear: this board reads up to 50 visible Tasks, not just the two you created.
+2. In **Setup → Lightning App Builder**, create an **App Page** named **Practice Activity Board** with a single region. Drag **Related Activity Board** from Custom Components. Use its settings to choose Case number, status, and priority. Save and select **Activation**. In the Lightning Experience app settings, add the page to an app available to you, then save. Return to that app and select **Practice Activity Board** from its navigation menu; refresh the browser if it is not listed yet. Add the same app/page access for the second user when you do the permission exercise. Use a dedicated learning app or pilot assignment where available. [Lightning App Page setup](https://trailhead.salesforce.com/content/learn/modules/lightning_app_builder/lightning_app_builder_apphome) · [App Builder properties](https://developer.salesforce.com/docs/platform/lwc/guide/targets-lightning-app-page.html)
+3. In Lightning Experience, confirm the Tasks are in the right columns, the counts match, and the Task and related record buttons open the expected records. Enable **Show case priority** and confirm the allowed user sees the synthetic value. Disable it, save the page, and confirm the field row goes away. Re-enable it for the permission check. Change a synthetic Task’s status from its regular record page and select **Refresh** on the board. The card should move to the new column.
+
+The board is read-only: move a Task by changing its Status on the standard record page, then refresh. It does not implement drag-and-drop.
+
+## Check access with a second user
+
+Your first working screen is a useful checkpoint. A practice org may lack a spare suitable user license. If so, keep the actual-user permission checks pending and continue learning locally; they remain required before a production release. Do not change your own admin profile or grant broad access to manufacture a passing test.
+
+Use a non-admin test user who can reach the app, Task, and Case, with effective Case Status read access and **no** Case Priority read access. If a suitable license is available, use a dedicated training user with a minimal profile and narrowly scoped access. Check the combined profile, permission sets, and groups. Open the same board in that user’s browser session or use Salesforce’s supported **Login** action for the training user. The Task and permitted Case details should remain, while Case Priority is absent. If Priority’s field permission can’t be narrowed for this user, record the field check as pending or adapt the board to a field you can verify. Check an inaccessible Case or an omitted parent separately. Salesforce’s activity access rules can also hide the Task itself. Compare with what the same user can open through standard Salesforce. Record any untested case as pending. [Field permissions](https://help.salesforce.com/s/articleView?id=sf.users_profiles_field_perms.htm&type=5) · [Activity access](https://help.salesforce.com/s/articleView?id=sales.activities_view.htm&language=en_US&type=5)
+
+Check the learning org’s API 68.0 GraphQL schema for the intended viewers. Confirm `Task`, the `Task.What` relationship, and the related record fields the board uses. Salesforce builds the schema from the user’s permissions and supported objects. If `Task.What` is absent, the Task query can fail even with `@optional` and needs to be adapted to that schema. When the Task query succeeds, the separate Case query can fail or omit data and the Task cards remain visible with a notice. A dry run checks metadata deployment. Verify the actual board with the two users to check the queries and access. [GraphQL schema and record access](https://developer.salesforce.com/docs/platform/graphql/guide/query-record-objects.html) · [Polymorphic relationships](https://developer.salesforce.com/docs/platform/graphql/guide/filter-polymorphic.html) · [GraphQL query command](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_api_request_graphql.html)
 
 ## Small build lessons to keep
 
@@ -73,9 +108,19 @@ The supplied tests use synthetic wire data for grouping, field choices, missing 
 - Public Boolean properties start as `false` in JavaScript. The preferred App Builder values belong in the component's XML settings. This avoids a compiler/configuration failure and keeps the controls switchable. [Salesforce Boolean properties](https://developer.salesforce.com/docs/platform/lwc/guide/js-props-boolean.html)
 - A query can return useful data and errors together. Preserve permitted Task cards when the separate Case-details query fails, show a useful notice, and clear stale details before retrying. The bundled tests keep these failure cases visible.
 
+## If the board does not look right
+
+| Symptom | Check with Claude |
+|---|---|
+| Related Activity Board is missing from Custom Components | Confirm deployment succeeded in this org and that you created an **App Page**, the supported page type; refresh App Builder |
+| The page is saved but there is no tab | Reopen Activation, confirm its Lightning app assignment, then open that app's navigation menu |
+| The board has no cards | Create the synthetic Tasks and check that the same user can open them in standard Tasks; select Refresh |
+| Cards appear but Case rows do not | Select the board in App Builder, enable the desired Case fields, save, and refresh; check the Task's Related To and actual Case/field access |
+| A loading or query error persists | Keep the error distinct from an empty board. Have Claude inspect the actual GraphQL response and this user's schema using the reference above; share only sanitized error details |
+
 ## Save and adapt the baseline
 
-Keep the DX source, local tests, and dependency lockfile together. Record the CLI and API versions, bundle path, learning alias, page assignment, and outcomes you observed. To undo the exercise, remove its app page assignment before removing any bundle metadata. Remove only the synthetic data and exercise access you added, with the org owner’s authorization.
+Use **File → Save All** in the lab. Keep the DX source, local tests, and generated `package-lock.json` together. Ask Claude to update the lab's existing `README.md` with the completed steps, test result and any pending org/user checks so you can resume. The learning baseline is complete when local tests pass, deployment succeeds, the app page shows the synthetic Tasks, its field controls and links work, and Refresh reflects a Task change. Actual-user access checks must either be observed or explicitly listed as pending. Do not label an untested check as passed. Record the CLI and API versions, bundle path, learning alias, page assignment, and outcomes you observed. To undo the exercise, remove its app page assignment before removing any bundle metadata. Remove only the synthetic data and exercise access you added, with the org owner’s authorization.
 
 For another Task parent, inspect the actual object and its supported fields and confirm that it allows activities. The board can link to a returned Related To record, and the packaged extra fields are specific to Case. To add details for a different parent, verify the relationship and schema for the intended users. Add a fixed, scoped batch read and explicitly chosen fields to the card configuration, then test absent, allowed, and denied results. To board a different card object, choose that object’s scope, grouping field, and permissions as a separate design choice. [Enable activities for a custom object](https://help.salesforce.com/s/articleView?id=000385007&language=en_US&type=1)
 

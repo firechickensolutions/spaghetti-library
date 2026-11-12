@@ -13,7 +13,7 @@ Use this when a learning project becomes a proposed release. Identify the busine
 
 ## Rehearse the release in a sandbox
 
-Keep the proposed metadata in source control with a reviewable diff. Pin the supported Salesforce API in project and component metadata. Record the CLI and Node versions used, and commit the lockfile for test dependencies. Verify that the representative sandbox and target production org support the intended API and features. A preview sandbox may be on a newer release than production.
+Keep the proposed metadata in source control with a reviewable diff. Pin the supported Salesforce API in project and component metadata. Record the CLI and Node versions used, and commit the lockfile for test dependencies. Review dependency advisories for the development toolchain, assess their actual exposure, apply compatible fixes with the relevant tests, and record any unresolved findings and release decision. Never use a forced major-version audit fix without reviewing and retesting it. Verify that the representative sandbox and target production org support the intended API and features. A preview sandbox may be on a newer release than production.
 
 Compare the narrowly scoped candidate with current target metadata, including page assignments, permission sets, dependencies, and intervening Setup edits. Retrieve comparison copies to a separate directory so they don’t overwrite your proposed change. Production orgs lack source tracking. A preview by itself can miss drift.
 

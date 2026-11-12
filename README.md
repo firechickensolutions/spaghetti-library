@@ -38,7 +38,7 @@ spaghetti-library/
 
 ### Build your first Salesforce component
 
-If you’re a Salesforce admin new to coding, start with [Your first Salesforce component with Claude Code](salesforce-starter/START-HERE.md). It walks you through VS Code and Salesforce CLI setup, a fresh DX project, and a read-only Task board with related Case details in a learning org on Winter ’27 / API 68.0. From GitHub, choose **Code → Download ZIP**, extract it, and copy the whole starter folder including the hidden `.claude` directory.
+If you’re a Salesforce admin new to coding, start with [Your first Salesforce component with Claude Code](salesforce-starter/START-HERE.md). It walks you through VS Code and Salesforce CLI setup, a fresh DX project, and a read-only Task board with related Case details in a learning org on Winter ’27 / API 68.0. The [first-time setup guide](salesforce-starter/FIRST-TIME-SETUP.md) starts with account access, downloading the ZIP, installing tools, and opening the right folder on Windows or Mac. It includes expected results and recovery steps for common setup problems.
 
 Clone the repo:
 
