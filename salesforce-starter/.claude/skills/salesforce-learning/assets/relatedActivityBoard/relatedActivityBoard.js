@@ -14,13 +14,7 @@ const TASKS_QUERY = gql`
                             Status { value displayValue }
                             Priority @optional { value displayValue }
                             ActivityDate @optional { value }
-                            What @optional {
-                                ... on Record {
-                                    Id
-                                    ApiName
-                                    DisplayValue @optional
-                                }
-                            }
+                            WhatId @optional { value displayValue }
                         }
                     }
                     pageInfo { hasNextPage }
@@ -31,13 +25,14 @@ const TASKS_QUERY = gql`
 `;
 
 const CASE_DETAILS_QUERY = gql`
-    query RelatedActivityCaseDetails($caseIds: [ID!]!) {
+    query RelatedActivityCaseDetails($parentIds: [ID!]!) {
         uiapi {
             query {
-                Case(first: 50, where: { Id: { in: $caseIds } }) @optional {
+                Case(first: 50, where: { Id: { in: $parentIds } }) @optional {
                     edges {
                         node {
                             Id
+                            Subject @optional { value }
                             CaseNumber @optional { value }
                             Status @optional { value displayValue }
                             Priority @optional { value displayValue }
@@ -56,7 +51,7 @@ const CASE_FIELDS = [
 ];
 
 function toCard({ node }) {
-    const parent = node.What;
+    const parent = node.WhatId;
     return {
         id: node.Id,
         subject: node.Subject?.value ?? 'Untitled task',
@@ -64,15 +59,7 @@ function toCard({ node }) {
         statusLabel: node.Status?.displayValue ?? node.Status?.value ?? 'Status unavailable',
         priority: node.Priority?.displayValue ?? node.Priority?.value,
         dueDate: node.ActivityDate?.value,
-        related: parent?.Id && parent.ApiName
-            ? {
-                id: parent.Id,
-                objectApiName: parent.ApiName,
-                label: typeof parent.DisplayValue === 'string' && parent.DisplayValue
-                    ? parent.DisplayValue
-                    : 'Open related record'
-            }
-            : undefined
+        related: parent?.value ? { id: parent.value, label: parent.displayValue } : undefined
     };
 }
 
@@ -83,7 +70,7 @@ export default class RelatedActivityBoard extends NavigationMixin(LightningEleme
 
     tasks = [];
     caseDetails = new Map();
-    caseIds = [];
+    parentIds = [];
     caseVariables;
     refreshTasks;
     refreshCases;
@@ -116,12 +103,12 @@ export default class RelatedActivityBoard extends NavigationMixin(LightningEleme
             return;
         }
         this.refreshCases = refresh ?? this.refreshCases;
-        const edges = data?.uiapi?.query?.Case?.edges ?? [];
-        const visibleIds = new Set(this.caseIds);
+        const edges = data?.uiapi?.query?.Case?.edges;
+        const visibleIds = new Set(this.parentIds);
         this.caseDetails = new Map(
-            edges.filter((edge) => visibleIds.has(edge?.node?.Id)).map(({ node }) => [node.Id, node])
+            (Array.isArray(edges) ? edges : []).filter((edge) => visibleIds.has(edge?.node?.Id)).map(({ node }) => [node.Id, node])
         );
-        this.casePartial = Boolean(errors?.length) || this.caseDetails.size < this.caseIds.length;
+        this.casePartial = Boolean(errors?.length) || !Array.isArray(edges);
         this.caseLoading = false;
     }
 
@@ -134,13 +121,12 @@ export default class RelatedActivityBoard extends NavigationMixin(LightningEleme
         this.tasks = hasTaskRows ? edges.filter((edge) => edge?.node?.Id).map(toCard) : [];
         this.hasMoreTasks = page?.pageInfo?.hasNextPage ?? false;
 
-        const ids = [...new Set(this.tasks
-            .filter(({ related }) => related?.objectApiName === 'Case')
-            .map(({ related }) => related.id))].sort();
+        // The Case query returns only matching, accessible Cases from these parent IDs.
+        const ids = [...new Set(this.tasks.map(({ related }) => related?.id).filter(Boolean))].sort();
 
-        if (ids.join(',') !== this.caseIds.join(',')) {
-            this.caseIds = ids;
-            this.caseVariables = ids.length ? { caseIds: ids } : undefined;
+        if (ids.join(',') !== this.parentIds.join(',')) {
+            this.parentIds = ids;
+            this.caseVariables = ids.length ? { parentIds: ids } : undefined;
             this.caseDetails = new Map();
             this.refreshCases = undefined;
             this.caseLoading = ids.length > 0;
@@ -180,7 +166,11 @@ export default class RelatedActivityBoard extends NavigationMixin(LightningEleme
                     label,
                     value: details[key].displayValue ?? details[key].value
                 }));
-            group.cards.push({ ...task, caseRows });
+            const related = task.related && {
+                id: task.related.id,
+                label: details?.Subject?.value || task.related.label || 'Open related record'
+            };
+            group.cards.push({ ...task, related, caseRows });
             groups.set(task.status, group);
         }
         return [...groups.values()];
@@ -189,8 +179,6 @@ export default class RelatedActivityBoard extends NavigationMixin(LightningEleme
     async refreshBoard() {
         const previousCaseVariables = this.caseVariables;
         this.refreshing = true;
-        this.caseDetails = new Map();
-        this.casePartial = this.caseIds.length > 0;
         try {
             await this.refreshTasks();
         } catch {
@@ -211,9 +199,10 @@ export default class RelatedActivityBoard extends NavigationMixin(LightningEleme
 
     openRecord(event) {
         const { recordId, objectApiName } = event.currentTarget.dataset;
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: { recordId, objectApiName, actionName: 'view' }
-        });
+        const attributes = { recordId, actionName: 'view' };
+        if (objectApiName) {
+            attributes.objectApiName = objectApiName;
+        }
+        this[NavigationMixin.Navigate]({ type: 'standard__recordPage', attributes });
     }
 }
