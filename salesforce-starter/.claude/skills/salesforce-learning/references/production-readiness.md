@@ -1,0 +1,30 @@
+# Prepare a Salesforce change for production
+
+Use this when a learning project becomes a proposed release. Identify the business outcome, the people affected, the exact metadata, and the org where each check will run. A separate production release requires the org owner’s approval of the named target and change.
+
+## Prove behavior and access on representative data
+
+- Use the normal Lightning page as an intended user and as a restricted user in a representative sandbox. Check object permissions, field-level security, and record sharing separately for every object the feature reads or writes. For a related-record display, seed a known value that one user can see and the other can’t. Both users should still see the allowed parts of the same screen. Check actual profile and permission set assignments.
+- Use native configuration or Lightning Data Service where it fits. For list screens, fetch only the needed fields, filter on the server, and paginate or cap the result with an explicit indication when more records exist. Avoid a request for every card. If you need Apex, use explicit access modes and test collection queries and DML with a realistic batch size and the other automation running in the same transaction.
+- Cover the main workflow and the cases users encounter at the boundaries. For a board, exercise loading, an empty result, a missing relationship, an inaccessible field, an error, and a larger dataset. Check whether the board reflects changed records after refresh, and how it signals stale data. Show a safe error and a usable retry for a failed load. Keep inaccessible values out of client data and logs, and keep failures visible to the user.
+- Use Jest for repeatable component behavior and Apex tests for changed server behavior. Use synthetic fixtures. Run the actual page and access checks separately. If the feature writes records, verify the save, a rejected write, and the behavior when it is attempted again after a timeout. Check any validation rule, Flow, or trigger that shares the transaction.
+
+[Salesforce LWC data guidelines](https://developer.salesforce.com/docs/platform/lwc/guide/data-guidelines.html) · [GraphQL wire adapter practices](https://developer.salesforce.com/docs/platform/graphql/guide/graphql-wire-lwc-best.html) · [Permissions, Apex, and tests](permissions-and-apex.md)
+
+## Rehearse the release in a sandbox
+
+Keep the proposed metadata in source control with a reviewable diff. Pin the supported Salesforce API in project and component metadata. Record the CLI and Node versions used, and commit the lockfile for test dependencies. Verify that the representative sandbox and target production org support the intended API and features. A preview sandbox may be on a newer release than production.
+
+Compare the narrowly scoped candidate with current target metadata, including page assignments, permission sets, dependencies, and intervening Setup edits. Retrieve comparison copies to a separate directory so they don’t overwrite your proposed change. Production orgs lack source tracking. A preview by itself can miss drift.
+
+Validate the exact release scope in the sandbox. To run Apex regression tests during sandbox validation, use `sf project deploy start --dry-run --test-level RunLocalTests` with the intended `--target-org`, API version, and a scoped source path or manifest. Check the recorded tests and terminal status. Then deploy the same candidate to the sandbox and exercise the page as real users. Rehearse the steps to turn off the pilot or restore the prior metadata and access.
+
+[Deploy command](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_start.html) · [Metadata deployment best practices](https://developer.salesforce.com/blogs/2025/10/master-metadata-api-deployments-with-best-practices)
+
+## Release to a named target and check it
+
+Confirm the exact target org, candidate revision and metadata scope, user audience, and authorized change. Start with an additive deployment and a small audience where practical. For a new board, make it available on a dedicated app page or tab for pilot users. Preserve the existing page or board so the pilot can switch back quickly.
+
+Check the test level for the actual target and payload. Development deployments can default to running no Apex tests. Production validation via `sf project deploy validate` runs Apex tests and can support a quick deploy of its exact successful validation job in the same org. If that route is used, check that the job is still valid and that the org hasn’t changed in a way that invalidates the result. A validation reports deployability. It does not exercise the finished page as an ordinary user. [Production validation](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_validate.html) · [Quick deploy](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_quick.html)
+
+Check the deployment job to terminal success, then verify the actual page assignment, pilot-user permissions, and the expected behavior in production. Watch for the specific conditions that would cause you to disable the pilot, such as a wrong record appearing, missing permitted cards, or sustained errors at normal volume. Revert exposure by removing or restoring the page or tab assignment. Restore prior metadata from the reviewed revision if needed. A rollback of a failed deployment covers the deployment transaction. Reverting metadata after release does not undo business data changes or external effects. Plan data recovery separately if the feature can write data. [Metadata API deployment lifecycle](https://developer.salesforce.com/blogs/2025/09/take-a-deep-dive-into-metadata-api-deployments)

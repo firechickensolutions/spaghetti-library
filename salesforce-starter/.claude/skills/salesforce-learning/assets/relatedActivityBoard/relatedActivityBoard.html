@@ -1,0 +1,91 @@
+<template>
+    <lightning-card title="Related Activity Board" icon-name="standard:task">
+        <template lwc:if={canRefresh}>
+            <lightning-button
+                slot="actions"
+                label="Refresh"
+                onclick={refreshBoard}
+                disabled={loading}
+            ></lightning-button>
+        </template>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-text-body_small slds-m-bottom_small">
+                Learning view. Up to 50 tasks visible to you, grouped by status.
+            </p>
+            <template lwc:if={loading}>
+                <p role="status">Loading tasks…</p>
+            </template>
+            <template lwc:elseif={taskError}>
+                <p role="alert">Tasks could not be loaded. Refresh or reload the page to try again.</p>
+            </template>
+            <template lwc:else>
+                <template lwc:if={taskPartial}>
+                    <p class="notice" role="status">Some tasks or related records could not be loaded.</p>
+                </template>
+                <template lwc:if={caseLoading}>
+                    <p class="notice" role="status">Loading case details…</p>
+                </template>
+                <template lwc:elseif={casePartial}>
+                    <p class="notice" role="status">Some case details are unavailable.</p>
+                </template>
+                <template lwc:if={hasTasks}>
+                    <p class="slds-m-bottom_small">{taskCount} tasks shown</p>
+                    <template lwc:if={hasMoreTasks}>
+                        <p class="notice" role="status">
+                            More tasks are available. This learning board shows the first 50 only.
+                        </p>
+                    </template>
+                    <div class="board" role="region" aria-label="Task status columns" tabindex="0">
+                        <template for:each={columns} for:item="column">
+                            <section class="column" key={column.key} aria-label={column.label}>
+                                <h2 class="slds-text-heading_small">{column.label} ({column.cards.length})</h2>
+                                <ul class="slds-m-top_small">
+                                    <template for:each={column.cards} for:item="card">
+                                        <li class="task-card" key={card.id}>
+                                            <lightning-button
+                                                class="task-link"
+                                                variant="base"
+                                                label={card.subject}
+                                                data-record-id={card.id}
+                                                data-object-api-name="Task"
+                                                onclick={openRecord}
+                                            ></lightning-button>
+                                            <p lwc:if={card.priority}>Priority: {card.priority}</p>
+                                            <p lwc:if={card.dueDate}>
+                                                Due:
+                                                <lightning-formatted-date-time
+                                                    value={card.dueDate}
+                                                    time-zone="UTC"
+                                                ></lightning-formatted-date-time>
+                                            </p>
+                                            <template lwc:if={card.related}>
+                                                <p class="slds-m-top_x-small">Related record</p>
+                                                <lightning-button
+                                                    class="related-link"
+                                                    variant="base"
+                                                    label={card.related.label}
+                                                    data-record-id={card.related.id}
+                                                    data-object-api-name={card.related.objectApiName}
+                                                    onclick={openRecord}
+                                                ></lightning-button>
+                                            </template>
+                                            <dl lwc:if={card.caseRows.length}>
+                                                <template for:each={card.caseRows} for:item="row">
+                                                    <div class="case-row" key={row.key}>
+                                                        <dt>{row.label}</dt>
+                                                        <dd>{row.value}</dd>
+                                                    </div>
+                                                </template>
+                                            </dl>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </section>
+                        </template>
+                    </div>
+                </template>
+                <p lwc:else role="status">No tasks to show.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
