@@ -4,6 +4,12 @@
 
 You’ll set up VS Code and Salesforce CLI, create a fresh Salesforce DX project, and deploy a **Related Activity Board** in a learning org on **Winter ’27 / API 68.0**. It’s a separate, read-only Lightning Web Component (LWC) modeled on Kanban. Task cards group by status and show related record links and selected Case fields when Salesforce allows them. You choose which Case fields to show in Lightning App Builder. Use a personal Developer Edition org, a suitable Trailhead Playground, or an approved development sandbox with synthetic data. [Salesforce Winter ’27 developer guide](https://developer.salesforce.com/blogs/2026/10/developers-guide-to-the-winter-27-release)
 
+## Built through a human-and-AI collaboration
+
+This pack grew from a practical request: show the work on a Task board with enough related-record context to make the cards useful. Firechicken Solutions set the use case, the beginner experience, and the standard for sharing it. AI coding agents helped write the component and guides, check Salesforce documentation, run tests, and repair the problems those checks exposed.
+
+You can work the same way. Your admin experience helps you decide which records belong on the screen, what each field means, and who should see it. Claude can turn that direction into a small implementation, explain the files, and run repeatable checks with you. You review the result and decide when a change is ready for your learning org. The supplied component gives you a starting point to inspect and extend.
+
 ## Start here on a new computer
 
 Follow [First-time setup](FIRST-TIME-SETUP.md) first. It covers the download, VS Code, Claude Code installation and account access, and how to open the right folder. You do not need Git or a GitHub account for this download.
@@ -23,7 +29,8 @@ Guide me through the remaining setup, a fresh DX project, and the supplied
 Related Activity Board LWC on its own Lightning App Page. Give me one step
 at a time and wait for my result before the next step. Explain each command,
 where to run it, and what I should see. Use Winter ’27 / API 68.0 and synthetic
-Tasks and Cases. Run the local tests before deployment. Let me sign in in the
+Tasks and Cases. Install the bundled locked dependencies, then run the full
+audit, component tests, toolchain checks and lint before deployment. Let me sign in in the
 browser, and confirm the learning org and change with me before deployment
 or Setup edits. Show me the App Builder field controls and how to check what
 allowed and restricted users can see. Help me save the baseline and identify

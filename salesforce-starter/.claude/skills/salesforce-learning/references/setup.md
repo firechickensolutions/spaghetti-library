@@ -59,7 +59,7 @@ cd salesforce-learning-lab
 
 Use **File → New Window**, then **File → Open Folder** to open `salesforce-learning-lab` in the second window. Leave Claude in the starter window. Open a new terminal in the lab window for all remaining project commands. Confirm `pwd` ends in `salesforce-learning-lab` and `sfdx-project.json` is visible at the top of Explorer. Its `sourceApiVersion` should be `68.0`; its package directory is normally `force-app`. [DX project generator](https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_template_generate_project.html)
 
-You can now copy the component and run the [local tests](first-lwc.md#run-the-bundled-local-tests) without an org. Connect a learning org before proceeding to that guide's deployment steps.
+You can now copy the component and bundled test-tooling files, then run the [local tests](first-lwc.md#install-the-checked-dependency-set-and-run-the-tests) without an org. Connect a learning org before proceeding to that guide's deployment steps.
 
 ## Choose and verify your learning org
 
