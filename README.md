@@ -40,6 +40,8 @@ spaghetti-library/
 
 If you’re a Salesforce admin new to coding, start with [Your first Salesforce component with Claude Code](salesforce-starter/START-HERE.md). It walks you through VS Code and Salesforce CLI setup, a fresh DX project, and a read-only Task board with related Case details in a learning org on Winter ’27 / API 68.0. Built through a human-and-AI collaboration, the pack shows how an admin can direct a coding agent, inspect the result, and verify a small Salesforce change. The [first-time setup guide](salesforce-starter/FIRST-TIME-SETUP.md) starts with account access, downloading the ZIP, installing tools, and opening the right folder on Windows or Mac. It includes expected results and recovery steps for common setup problems. The [live permission rehearsal](salesforce-starter/.claude/skills/salesforce-learning/references/first-lwc.md#observed-permission-checks) covers allowed and denied fields, Case access, private Tasks, and a page-layout issue found through a real non-admin session.
 
+After the baseline works, [Make the board your own](salesforce-starter/NEXT-STEPS.md) offers four guided exercises with Claude prompts and expected results, plus a guide to reusing the skills in your own workflows.
+
 Clone the repo:
 
 ```bash

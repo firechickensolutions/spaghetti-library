@@ -10,7 +10,11 @@ This pack grew from a practical request: show the work on a Task board with enou
 
 **Live rehearsal:** The board was deployed and walked in a Winter ’27 Developer Edition org with fictional Tasks and a Case. App-page setup, record links, Case-field switches, and refresh after a Task status change were verified. The walkthrough exposed and fixed two runtime bugs that local tests had missed; the [board guide](.claude/skills/salesforce-learning/references/first-lwc.md#small-build-lessons-to-keep) explains the lessons. The [restricted-user rehearsal](.claude/skills/salesforce-learning/references/first-lwc.md#observed-permission-checks) also passed: field hiding, denied Case access, private Task exclusion, and permitted record navigation were checked through a real non-admin session. Repeat these checks for your own org and intended users before a production release.
 
-You can work the same way. Your admin experience helps you decide which records belong on the screen, what each field means, and who should see it. Claude can turn that direction into a small implementation, explain the files, and run repeatable checks with you. You review the result and decide when a change is ready for your learning org. The supplied component gives you a starting point to inspect and extend.
+## What you can do with this pack
+
+You gain a working example, a learning environment, and a repeatable way to turn your admin knowledge into small Salesforce changes. Your understanding of records, relationships, permissions, and user needs guides the work; Claude helps write and explain the code and run the checks. You review the result in Salesforce.
+
+Once your baseline works, follow [Make the board your own](NEXT-STEPS.md). Four guided exercises take you through changing a Task's status, choosing the Case fields on cards, making your first small code change, and planning a feature for your own workflow. Each has a prompt for Claude and a result you can check. The guide also explains how to reuse the skills and lessons in another project.
 
 ## Start here on a new computer
 
